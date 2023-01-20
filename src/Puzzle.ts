@@ -2,15 +2,10 @@ import {BaseGame, GameState, Size} from "./Game";
 
 
 export enum Input {
-    ONE,
-    TWO,
-    THREE,
-    FOUR,
-    FIVE,
-    SIX,
-    SEVEN,
-    EIGHT,
-    NINE,
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
 }
 
 export const ColorArray = [
@@ -89,38 +84,20 @@ export class Puzzle extends BaseGame {
         if (inputString === null) {
             return false;
         }
-        let inputInteger = parseInt(inputString!);
-        if (isNaN(inputInteger)) {
-            return false;
-        }
         let input: Input | null = null;
-        switch (inputInteger) {
-            case 1 || 'ONE' || '1':
-                input = Input.ONE;
+        switch (inputString) {
+            case 'ArrowUp':
+                input = Input.UP;
                 break;
-            case 2 || 'TWO' || '2':
-                input = Input.TWO;
+            case 'ArrowDown':
+                input = Input.DOWN;
                 break;
-            case 3 || 'THREE' || '3':
-                input = Input.THREE;
+            case 'ArrowLeft':
+                input = Input.LEFT;
                 break;
-            case 4 || 'FOUR' || '4':
-                input = Input.FOUR;
+            case 'ArrowRight':
+                input = Input.RIGHT;
                 break;
-            case 5 || 'FIVE' || '5':
-                input = Input.FIVE;
-                break;
-            case 6 || 'SIX' || '6':
-                input = Input.SIX;
-                break;
-            case 7 || 'SEVEN' || '7':
-                input = Input.SEVEN;
-                break;
-            case 8 || 'EIGHT' || '8':
-                input = Input.EIGHT;
-                break;
-            case 9 || 'NINE' || '9':
-                input = Input.NINE;
         }
         if (input === null) return false;
 
@@ -132,34 +109,116 @@ export class Puzzle extends BaseGame {
         for (let i = 0; i < 3; i++) {
             console.log(this.puzzle_state[i * 3] + ' ' + this.puzzle_state[i * 3 + 1] + ' ' + this.puzzle_state[i * 3 + 2]);
         }
-        let empty_index = this.puzzle_state.indexOf(0);
-        let empty_row = Math.floor(empty_index / 3);
-        let empty_col = empty_index % 3;
 
-        console.log('empty_index: ' + empty_index);
-        console.log('empty_row: ' + empty_row);
-        console.log('empty_col: ' + empty_col);
-
-        let can_move = false;
-        let chosen_row = Math.floor(input / 3);
-        let chosen_col = input % 3;
-        console.log('chosen_row: ' + chosen_row);
-        console.log('chosen_col: ' + chosen_col);
-
-        console.log('[empty_row - 1, empty_row + 1].includes(chosen_row): ' + [empty_row - 1, empty_row + 1].includes(chosen_row));
-        console.log('[empty_col - 1, empty_col + 1].includes(chosen_col): ' + [empty_col - 1, empty_col + 1].includes(chosen_col));
-        if ([empty_row - 1, empty_row + 1].includes(chosen_row) && chosen_col === empty_col) {
-            can_move = true;
-        } else if ([empty_col - 1, empty_col + 1].includes(chosen_col) && chosen_row === empty_row) {
-            can_move = true;
+        // user input, move the element which is able to perform the move
+        let emptyIndex = this.puzzle_state.indexOf(0);
+        let emptyRow = Math.floor(emptyIndex / 3);
+        let emptyCol = emptyIndex % 3;
+        let moveIndex = -1;
+        switch (input) {
+            case Input.UP:
+                if (emptyRow < 2) {
+                    moveIndex = emptyIndex + 3;
+                }
+                break;
+            case Input.DOWN:
+                if (emptyRow > 0) {
+                    moveIndex = emptyIndex - 3;
+                }
+                break;
+            case Input.LEFT:
+                if (emptyCol < 2) {
+                    moveIndex = emptyIndex + 1;
+                }
+                break;
+            case Input.RIGHT:
+                if (emptyCol > 0) {
+                    moveIndex = emptyIndex - 1;
+                }
+                break;
         }
-        console.log('can_move: ' + can_move);
-        if (!can_move) {
-            return false;
+        if (moveIndex !== -1) {
+            let temp = this.puzzle_state[emptyIndex];
+            this.puzzle_state[emptyIndex] = this.puzzle_state[moveIndex];
+            this.puzzle_state[moveIndex] = temp;
         }
-
-        this.puzzle_state[empty_index] = this.puzzle_state[input];
-        this.puzzle_state[input] = 0;
         return true;
+        //
+        // for (let i = 0; i < 3; i++) {
+        //     for (let j = 0; j < 3; j++) {
+        //     //    check if this element can perform the input
+        //         switch (input) {
+        //             case Input.UP:
+        //                 if (i === 2) {
+        //                     continue;
+        //                 }
+        //                 if (this.puzzle_state[i * 3 + j] === 0) {
+        //                     this.puzzle_state[i * 3 + j] = this.puzzle_state[(i + 1) * 3 + j];
+        //                     this.puzzle_state[(i + 1) * 3 + j] = 0;
+        //                     return true;
+        //                 }
+        //                 break;
+        //             case Input.DOWN:
+        //                 if (i === 0) {
+        //                     continue;
+        //                 }
+        //                 if (this.puzzle_state[i * 3 + j] === 0) {
+        //                     this.puzzle_state[i * 3 + j] = this.puzzle_state[(i - 1) * 3 + j];
+        //                     this.puzzle_state[(i - 1) * 3 + j] = 0;
+        //                     return true;
+        //                 }
+        //                 break;
+        //             case Input.LEFT:
+        //                 if (j === 2) {
+        //                     continue;
+        //                 }
+        //                 if (this.puzzle_state[i * 3 + j] === 0) {
+        //                     this.puzzle_state[i * 3 + j] = this.puzzle_state[i * 3 + j + 1];
+        //                     this.puzzle_state[i * 3 + j + 1] = 0;
+        //                     return true;
+        //                 }
+        //                 break;
+        //             case Input.RIGHT:
+        //                 if (j === 0) {
+        //                     continue;
+        //                 }
+        //                 if (this.puzzle_state[i * 3 + j] === 0) {
+        //                     this.puzzle_state[i * 3 + j] = this.puzzle_state[i * 3 + j - 1];
+        //                     this.puzzle_state[i * 3 + j - 1] = 0;
+        //                     return true;
+        //                 }
+        //         }
+        //     }
+        // }
+        //
+        // let empty_index = this.puzzle_state.indexOf(0);
+        // let empty_row = Math.floor(empty_index / 3);
+        // let empty_col = empty_index % 3;
+        //
+        // console.log('empty_index: ' + empty_index);
+        // console.log('empty_row: ' + empty_row);
+        // console.log('empty_col: ' + empty_col);
+        //
+        // let can_move = false;
+        // let chosen_row = Math.floor(input / 3);
+        // let chosen_col = input % 3;
+        // console.log('chosen_row: ' + chosen_row);
+        // console.log('chosen_col: ' + chosen_col);
+        //
+        // console.log('[empty_row - 1, empty_row + 1].includes(chosen_row): ' + [empty_row - 1, empty_row + 1].includes(chosen_row));
+        // console.log('[empty_col - 1, empty_col + 1].includes(chosen_col): ' + [empty_col - 1, empty_col + 1].includes(chosen_col));
+        // if ([empty_row - 1, empty_row + 1].includes(chosen_row) && chosen_col === empty_col) {
+        //     can_move = true;
+        // } else if ([empty_col - 1, empty_col + 1].includes(chosen_col) && chosen_row === empty_row) {
+        //     can_move = true;
+        // }
+        // console.log('can_move: ' + can_move);
+        // if (!can_move) {
+        //     return false;
+        // }
+        //
+        // this.puzzle_state[empty_index] = this.puzzle_state[input];
+        // this.puzzle_state[input] = 0;
+        // return true;
     }
 }
