@@ -57,11 +57,6 @@ export class Puzzle extends BaseGame {
         }
     }
 
-    getPasscode(): string {
-        return 'picture-puzzle';
-    }
-
-
     public render() {
         let ctx = this.ctx;
         if (this.state === GameState.Playing) {

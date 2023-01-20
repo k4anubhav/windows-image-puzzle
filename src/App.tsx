@@ -4,8 +4,6 @@ import {ColorArray, Puzzle} from "./Puzzle";
 import {GameState} from "./Game";
 
 
-const passcode = "1234";
-
 const App: React.FC = () => {
     const [Won, setWon] = React.useState(false);
 
@@ -29,7 +27,7 @@ const App: React.FC = () => {
         <div className="App">
             <header className="App-header">
                 <h1>Puzzle</h1>
-                {Won && <h2>You won! Secret passcode is {passcode}</h2>}
+                {Won && <h2>You won! Secret passcode is {process.env.REACT_APP_PASSCODE}</h2>}
                 <div style={{display: 'flex', flexDirection: 'row', padding: 10, margin: 20}}>
                     {colors.map((color, index) => {
                         return <div key={index} style={{width: '50px', height: '50px', backgroundColor: color}}/>
