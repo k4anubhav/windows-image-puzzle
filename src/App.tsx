@@ -17,12 +17,13 @@ const App: React.FC = () => {
     const interval = setInterval(() => {
             if (game.state === GameState.Won) {
                 clearInterval(interval)
+                game.stopGameLoop();
                 setWon(true);
                 console.log("You won!")
             }
             game.render();
-        }
-        , 400);
+        }, 400
+    );
 
     return (
         <div className="App">

@@ -68,6 +68,7 @@ export abstract class BaseGame {
     protected _assets: Record<string, any> = {};
     protected inputHandler: InputHandler;
     protected _state: GameState = GameState.Title;
+    private _interval: NodeJS.Timer | null = null;
 
     get state() {
         return this._state;
@@ -105,11 +106,20 @@ export abstract class BaseGame {
     }
 
     startGameLoop() {
-        window.setInterval(() => {
+        if (this._interval !== null) {
+            return;
+        }
+        this._interval = setInterval(() => {
             let toUpdate = this.update();
             if (toUpdate) {
                 this.render();
             }
         }, 100);
+    }
+
+    stopGameLoop() {
+        if (this._interval) {
+            clearInterval(this._interval);
+        }
     }
 }

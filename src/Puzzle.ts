@@ -37,7 +37,7 @@ export class Puzzle extends BaseGame {
         }
         super(Puzzle.size);
         this.puzzle_state = [7, 2, 6, 5, 8, 3, 0, 1, 4];
-        this.puzzle_state = [1, 2, 3, 4, 5, 6, 7, 0, 8];
+        // this.puzzle_state = [1, 2, 3, 4, 5, 6, 7, 0, 8];
     }
 
     public static get instance() {
