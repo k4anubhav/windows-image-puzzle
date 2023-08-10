@@ -2,6 +2,8 @@
 
 Simple Windows Picture Puzzle Game.
 
+Use UP, DOWN, LEFT, RIGHT keys and take a look at favicon
+
 ## Available Scripts
 
 In the project directory, you can run:
